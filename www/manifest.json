@@ -7,18 +7,21 @@
     "64": "icons/twitch.png"
   },
   "permissions": ["tabs", "contextMenus", "clipboardWrite"],
-  "background": {
-    "scripts": ["background_script.js"]
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "borderify@example.com"
-    }
-  },
-  "content_scripts": [],
   "browser_action": {
     "default_icon": {
       "64": "icons/twitch.png"
     }
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.mozilla.org/*"],
+      "js": [
+        "wasm_game_of_life.js",
+        "index.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "/home/euge/Documentos/TPP/wasm-game-of-life/pkg/wasm_game_of_life_bg.wasm"
+  ]
 }
