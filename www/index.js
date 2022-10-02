@@ -1,3 +1,13 @@
-document.body.style.border = "5px solid red";
-// await wasm_bindgen(browser.runtime.getURL("/home/euge/Documentos/TPP/wasm-game-of-life/pkg/wasm_game_of_life_bg.wasm"));
-// wasm_bindgen.greet("persona")
+(async () => {
+  await load();
+})();
+
+async function load() {
+  document.body.style.border = "5px solid red";
+  console.log('here')
+  //const x = await wasm_bindgen(browser.runtime.getURL("wasm/wasm_game_of_life.wasm"));
+  //console.log("x:", x)
+  console.log('here2')
+  //console.log(wasm_bindgen.add(1,2));
+}
+
