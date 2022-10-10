@@ -6,3 +6,4 @@ pkg/
 wasm-pack.log
 www/node_modules
 extension/wasm_src/target
+target/
