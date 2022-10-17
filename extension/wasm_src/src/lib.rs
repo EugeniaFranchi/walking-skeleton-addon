@@ -30,3 +30,17 @@ pub fn add(x: i32, y: i32) {
         sum
     ));
 }
+
+#[wasm_bindgen(js_name = count)]
+pub fn count(image_data: &[u8]) {
+    let total = image_data.len();
+    log(&format!(
+        "Hay {} imágenes en {}",
+        total,
+        image_data
+    ));
+    let iter = image_data.iter();
+    for img in iter{
+        log(&format!("{}",img));
+    }
+}

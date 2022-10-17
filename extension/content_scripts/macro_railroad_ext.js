@@ -39,6 +39,23 @@ let wasm_bindgen;
         wasm.add(x, y);
     };
 
+    let WASM_VECTOR_LEN = 0;
+
+    function passArray8ToWasm0(arg, malloc) {
+        const ptr = malloc(arg.length * 1);
+        getUint8Memory0().set(arg, ptr / 1);
+        WASM_VECTOR_LEN = arg.length;
+        return ptr;
+    }
+    /**
+    * @param {Uint8Array} image_data
+    */
+    __exports.count = function(image_data) {
+        const ptr0 = passArray8ToWasm0(image_data, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.count(ptr0, len0);
+    };
+
     async function load(module, imports) {
         if (typeof Response === 'function' && module instanceof Response) {
             if (typeof WebAssembly.instantiateStreaming === 'function') {
