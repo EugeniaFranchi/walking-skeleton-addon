@@ -7,11 +7,14 @@ async function load() {
     wasm_bindgen.funcion();
     wasm_bindgen.add(1,2);
     let images = document.images
-    var srcList = [];
+    var imgList = [];
     for(var i = 0; i < images.length; i++) {
-        srcList.push(images[i].src);
-        console.log(srcList);
+        const response = await fetch(images[i].src)
+                                .then((response) => response.arrayBuffer())
+        const data = new Uint8Array(response);
+        console.log("data", data)
+        imgList.push(response);
     }
       
-    wasm_bindgen.count(srcList);
+    wasm_bindgen.count(imgList);
 }
