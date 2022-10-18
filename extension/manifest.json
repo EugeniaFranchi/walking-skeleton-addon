@@ -25,6 +25,8 @@
         "page": "options/options.html"
     },
     "web_accessible_resources": [
-        "wasm/macro_railroad_ext.wasm"
+        "wasm/macro_railroad_ext.wasm",
+        "classifier/model/saved_model.pb",
+        "classifier/example.jpg"
     ]
 }
