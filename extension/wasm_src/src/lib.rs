@@ -35,12 +35,11 @@ pub fn add(x: i32, y: i32) {
 pub fn count(image_data: &[u8]) {
     let total = image_data.len();
     log(&format!(
-        "Hay {} imágenes en {}",
-        total,
-        image_data
+        "Hay {} imágenes",
+        total
     ));
     let iter = image_data.iter();
     for img in iter{
-        log(&format!("{}",img));
+        log(&format!("img: {}", img));
     }
 }
