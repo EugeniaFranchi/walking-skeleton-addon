@@ -48,20 +48,26 @@ fn infer_impl(
 ) -> TractResult<(f32, u32)> {
     // load the model
 
+    log("CREATING MODEL");
     let mut model_data_mut = Cursor::new(model_data);
-    let mut r = tract_onnx::onnx().model_for_read(&mut model_data_mut);
+    let r = tract_onnx::onnx().model_for_read(&mut model_data_mut);
     let mut model = r.unwrap();
 
     // specify input type and shape
+    log("SPECIFY INPUT TYPE AND SHAPE");
     model.set_input_fact(
         0,
-        InferenceFact::dt_shape(f32::datum_type(), tvec!(1, image_height, image_width, 3)),
+        f32::fact(&[200, 200, 1]).into(),
     )?;
     // optimize the model and get an execution plan
+    log("optimize the model and get an execution plan");
+    log("into_optimized");
     let model = model.into_optimized()?;
+    log("simpleplan::new()");
     let plan = SimplePlan::new(&model)?;
 
     // open image, resize it and make a Tensor out of it
+    log("open image, resize it and make a Tensor out of it");
     let image = image::load_from_memory(image_data).unwrap().to_rgb8();
     let resized = image::imageops::resize(
         &image,
@@ -70,15 +76,17 @@ fn infer_impl(
         ::image::imageops::FilterType::Triangle,
     );
     let image: Tensor =
-        tract_ndarray::Array4::from_shape_fn((1, image_height, image_width, 3), |(_, y, x, c)| {
+        tract_ndarray::Array4::from_shape_fn((1, image_height, image_width, 1), |(_, y, x, c)| {
             resized[(x as _, y as _)][c] as f32 / 255.0
         })
         .into();
 
     // run the plan on the input
+    log("run the plan on the input");
     let result = plan.run(tvec!(image))?;
 
     // find and display the max value with its index
+    log("find and display the max value with its index");
     let best = result[0]
         .to_array_view::<f32>()?
         .iter()

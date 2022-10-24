@@ -27,11 +27,11 @@ async function load() {
         var bytes = new Uint8Array(_res);
         console.log(bytes);
 
-        readFile(chrome.runtime.getURL('classifier/data/example.jpg'), function (img) {
+        readFile(chrome.runtime.getURL('classifier/example.jpg'), function (img) {
             console.log(img); // <--  result (file content)
             var pix = new Uint8Array(img);
             console.log(pix);
-            wasm_bindgen.infer(bytes, pix, 100, 100);
+            wasm_bindgen.infer(bytes, pix, 200, 200);
         });
     });
 }
