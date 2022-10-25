@@ -31,7 +31,7 @@ async function load() {
             console.log(img); // <--  result (file content)
             var pix = new Uint8Array(img);
             console.log(pix);
-            wasm_bindgen.infer(bytes, pix, 200, 200);
+            wasm_bindgen.infer(bytes, pix, 100, 100);
         });
     });
 }
