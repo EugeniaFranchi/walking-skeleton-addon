@@ -25,5 +25,3 @@ extension/chrome_helper/target/
 extension/chrome_helper/Cargo.lock
 extension/classifier/.ipynb_checkpoints
 extension/classifier/variables
-extension/classifier/model/*
-extension/classifier/*.pb
