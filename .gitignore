@@ -7,3 +7,4 @@ wasm-pack.log
 www/node_modules
 extension/wasm_src/target
 target/
+logger/extension/webpack/node_modules
