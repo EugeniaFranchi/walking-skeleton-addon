@@ -4,7 +4,25 @@
 
 Addon Firefox de estegoanalisis
 
+## Bibliotecas Preinstaladas
+- [Anaconda](https://www.anaconda.com/)
+- Tensorflow
+```
+pip install tensorflow
+``` 
+
 ## Preparación 
+
+### Clasificador
+1. Correr notebook (Run All) `classifier.ipyn`
+2. Convertir model.h5 a model.json
+```
+cd extension/model/
+
+tensorflowjs_converter --input_format keras ./model.h5 ./output/
+```
+
+### Extension
 1. Ir a carpeta webpack 
 ```
 cd extension/webpack
@@ -25,7 +43,7 @@ npx webpack
 - click en Load Temporary Addon
 - seleccionar `extension/manifest.json`
 
-5. Ir a `https://www.mozilla.org/en-US/` y ver la consola (F12) 
-
-
 ## Uso
+
+Ir a `https://www.mozilla.org/en-US/` y ver la consola (F12) 
+
