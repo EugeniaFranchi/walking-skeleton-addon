@@ -8,6 +8,9 @@ make all
 
 2. Cargar como extension temporal a firefox
 
+## Requisitos
+Tener instalado [Anaconda](https://www.anaconda.com/)
+
 ## Estructura del proyecto 
 - Classifier: Carpeta con el notebook de la red neuronal
 - src: Codigo rust
