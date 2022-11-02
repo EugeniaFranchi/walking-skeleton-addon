@@ -2,7 +2,13 @@
 
 ## Modo de uso
 1. Correr 
-Docker 
+Vscode dentro docker
+- Instalar extensión `Remote development`
+- Agregar usuario a grupo docker `sudo usermod -aG docker $USER`
+- Abrir vscode, hacer ctrl + shift + p y click en `Dev container: Reopen in container`
+- Esperar ...
+
+o Docker por separado 
 ```
 sudo docker compose run -p 8888:8888 web
 ```
