@@ -2,8 +2,18 @@
 
 ## Modo de uso
 1. Correr 
+Docker 
 ```
+sudo docker compose run -p 8888:8888 web
+```
+
+Dentro de docker
+```
+# Correr todo el proyecto
 make all
+
+# Abrir notebook jupyter
+jupyter notebook --allow-root --ip 0.0.0.0
 ```
 
 2. Cargar como extension temporal a firefox
