@@ -9,3 +9,4 @@ www/node_modules
 www/dist
 
 classifier/model
+classifier/.ipynb_checkpoints/
