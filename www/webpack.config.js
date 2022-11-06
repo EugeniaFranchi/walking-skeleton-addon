@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 const path = require('path');
 
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
   },
   mode: "development",
   plugins: [
-    new CopyWebpackPlugin({ patterns: [{ from: 'index.html', to: 'index.html' }] })
+    new CopyWebpackPlugin({ patterns: [{ from: 'index.html', to: 'index.html' }] }),
+    new NodePolyfillPlugin()
   ],
 };
