@@ -11,7 +11,6 @@ async function getImages() {
     var imgList = [];
     const asyncGetPixels = util.promisify(getPixels);
     console.log("Nro de imágenes a procesar:", images.length);
-    console.log("--INICIO PROCESO 1: IMAGEN -> TENSOR--");
     for(var i = 0; i < images.length; i++) {
         const pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
         const rgbaTens3d = tf.tensor3d(pixels.data, [pixels.shape[0], pixels.shape[1], 4])
@@ -20,48 +19,33 @@ async function getImages() {
         const tensor = smallImg.reshape([1, 100, 100, 3])
         imgList.push(tensor);
     }
-    console.log("--FIN PROCESO 1--");
     return imgList
+}
+
+async function classifyImages(imgList) {
+    // Carga del modelo
+    const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
+    model.summary();
+
+    // Predicción
+    imgList.forEach(img => {
+        const r = model.predict(img);
+        console.log("Prediction: ", r.toString());
+    });
 }
 
 async function run() {
     await wasm_bindgen(browser.runtime.getURL('pkg/wasmaddon_bg.wasm'));
 
-    // Carga del modelo
-    const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
-    model.summary();
-
-    // Obtener imágenes
-    // TODO: confirmar que obtenes las imágenes
-    // TODO: buscar librería que lo haga más piola
-    // https://js.tensorflow.org/api_react_native/0.6.0/#decodeJpeg
+    console.log("--INICIO PROCESO 1: IMAGEN -> TENSOR--");
     const imgList = await getImages();
+    console.log("--FIN PROCESO 1--");
 
-    /*
-        const response = await fetch(images[i].src, {}, { isBinary: true })
-                                .then((response) => response.arrayBuffer())
-        const data = new Uint8Array(response);
-        console.log("data", data);
-        console.log("images[i]", images[i].width);
-        console.log("images[i]", images[i].height);
-        console.log("data.length", data.length);
-        // Decodifico img a tensor
-        //const imageTensor = tf.node.decodeJpeg(imageData);
-        const imageTensor = tf.tensor3d(data);
-        console.log("tensor", imageTensor);
-        imgList.push(imageTensor);
-    }
-    */
-
-    // Transformar las imágenes al tamaño del clasificador?
-    // Aplicar el clasificador
     console.log("--INICIO PROCESO 2: TENSOR -> PREDICCIÓN--");
-    imgList.forEach(img => {
-        const r = model.predict(img);
-        console.log("Prediction: ", r.toString());
-    });
+    await classifyImages(imgList);
     console.log("--FIN PROCESO 2--");
-    // Pintar de rojo las imágenes peligrosas
+
+    // TODO: Pintar de rojo las imágenes peligrosas
 
     
     // const IMAGE_SIZE = 100;
