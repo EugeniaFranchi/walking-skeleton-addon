@@ -13,9 +13,13 @@ async function getImages() {
     console.log("Nro de imágenes a procesar:", images.length);
     for(var i = 0; i < images.length; i++) {
         const pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
+        // Uint8Array -> Tensor 3D RGBA [x,y,4]
         const rgbaTens3d = tf.tensor3d(pixels.data, [pixels.shape[0], pixels.shape[1], 4])
-        const rgbTens3d= tf.slice3d(rgbaTens3d, [0, 0, 0], [-1, -1, 3]) // strip alpha channel
+        // Tensor 3D RGBA [x,y,4] -> Tensor 3D RGB [x,y,3]
+        const rgbTens3d= tf.slice3d(rgbaTens3d, [0, 0, 0], [-1, -1, 3])
+        // Tensor 3D RGB [x,y,3] -> Tensor 3D RGB [100,100,3]
         const smallImg = tf.image.resizeBilinear(rgbTens3d, [100, 100]);
+        // Tensor 3D RGB [100,100,3] -> Tensor 4D RGB [1,100,100,3]
         const tensor = smallImg.reshape([1, 100, 100, 3])
         imgList.push(tensor);
     }
