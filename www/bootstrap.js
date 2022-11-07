@@ -6,7 +6,7 @@ const { add } = wasm_bindgen;
 document.body.style.border = "5px solid red";
 console.log('from bootstrap')
 
-async function getImages() {
+async function getImages(model) {
     let images = document.images
     var imgList = [];
     const asyncGetPixels = util.promisify(getPixels);
@@ -21,33 +21,23 @@ async function getImages() {
         const smallImg = tf.image.resizeBilinear(rgbTens3d, [100, 100]);
         // Tensor 3D RGB [100,100,3] -> Tensor 4D RGB [1,100,100,3]
         const tensor = smallImg.reshape([1, 100, 100, 3])
-        imgList.push(tensor);
+        //imgList.push(tensor);
+        const r = model.predict(tensor);
+        console.log("Prediction: ", r.toString());
     }
     return imgList
-}
-
-async function classifyImages(imgList) {
-    // Carga del modelo
-    const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
-    model.summary();
-
-    // Predicción
-    imgList.forEach(img => {
-        const r = model.predict(img);
-        console.log("Prediction: ", r.toString());
-    });
 }
 
 async function run() {
     await wasm_bindgen(browser.runtime.getURL('pkg/wasmaddon_bg.wasm'));
 
-    console.log("--INICIO PROCESO 1: IMAGEN -> TENSOR--");
-    const imgList = await getImages();
-    console.log("--FIN PROCESO 1--");
+    // Carga del modelo
+    const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
+    model.summary();
 
-    console.log("--INICIO PROCESO 2: TENSOR -> PREDICCIÓN--");
-    await classifyImages(imgList);
-    console.log("--FIN PROCESO 2--");
+    console.log("--INICIO PROCESO: IMAGEN -> PREDICCIÓN--");
+    const imgList = await getImages(model);
+    console.log("--FIN PROCESO--");
 
     // TODO: Pintar de rojo las imágenes peligrosas
 
