@@ -6,13 +6,15 @@ const { add } = wasm_bindgen;
 document.body.style.border = "5px solid red";
 console.log('from bootstrap')
 
-async function getImages(model) {
+async function getImagesAndPredict(model) {
     let images = document.images
-    var imgList = [];
     const asyncGetPixels = util.promisify(getPixels);
     console.log("Nro de imágenes a procesar:", images.length);
     for(var i = 0; i < images.length; i++) {
+        // OBTENER IMAGEN
         const pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
+
+        // PREDICCIÓN
         // Uint8Array -> Tensor 3D RGBA [x,y,4]
         const rgbaTens3d = tf.tensor3d(pixels.data, [pixels.shape[0], pixels.shape[1], 4])
         // Tensor 3D RGBA [x,y,4] -> Tensor 3D RGB [x,y,3]
@@ -21,11 +23,14 @@ async function getImages(model) {
         const smallImg = tf.image.resizeBilinear(rgbTens3d, [100, 100]);
         // Tensor 3D RGB [100,100,3] -> Tensor 4D RGB [1,100,100,3]
         const tensor = smallImg.reshape([1, 100, 100, 3])
-        //imgList.push(tensor);
-        const r = model.predict(tensor);
-        console.log("Prediction: ", r.toString());
+        const prediction = model.predict(tensor).dataSync();
+        console.log("Prediction: ", prediction);
+
+        // PINTAR IMAGEN
+        if (prediction[0] >= 0.7) {
+            images[i].style.filter = "blur(2px) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)";
+        }
     }
-    return imgList
 }
 
 async function run() {
@@ -36,7 +41,7 @@ async function run() {
     model.summary();
 
     console.log("--INICIO PROCESO: IMAGEN -> PREDICCIÓN--");
-    const imgList = await getImages(model);
+    await getImagesAndPredict(model);
     console.log("--FIN PROCESO--");
 
     // TODO: Pintar de rojo las imágenes peligrosas
