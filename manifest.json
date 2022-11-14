@@ -9,8 +9,7 @@
     "content_scripts": [
         {
             "matches": [
-                "*://*.mozilla.org/*",
-                "*://*.google.com/*"
+                "<all_urls>"
             ],
             "js": [
                 "pkg/wasmaddon.js",
@@ -21,5 +20,6 @@
     "web_accessible_resources": [
         "pkg/wasmaddon_bg.wasm",
         "classifier/model/model.json"
-    ]
+    ],
+    "permissions": ["<all_urls>"]
 }
