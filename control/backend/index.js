@@ -1,15 +1,23 @@
 const express = require("express");
+const cors = require('cors');
 
 let counter = {};
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.send("Hello world");
 });
 
 app.get("/counter", (req, res) => {
-    counter[req.site] = counter[req.site] + 1 || 0;
     res.send(counter);
 });
 
-app.listen(3000, () => console.log('Server listening at port 3000'));
+app.post("/counter", (req, res) => {
+    console.log(req.body);
+    counter[req.body.site] = { stego: req.body.stego, total: req.body.total }
+    res.send(counter);
+});
+
+app.listen(5000, () => console.log('Server listening at port 5000'));
