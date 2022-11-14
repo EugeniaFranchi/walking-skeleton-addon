@@ -8,6 +8,10 @@ pkg:
 	wasm-pack build --dev --target no-modules
 
 www:
-	cd www && npm run build
+	cd www && npm install && npm run build
+
+web-ext:
+	mkdir -p tmp
+	TMPDIR=./tmp web-ext run
 
 .PHONY: www pkg all model
