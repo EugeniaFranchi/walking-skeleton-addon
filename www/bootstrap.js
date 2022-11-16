@@ -12,22 +12,43 @@ async function getImagesAndPredict(model) {
     console.log("Nro de imágenes a procesar:", images.length);
     for(var i = 0; i < images.length; i++) {
         // OBTENER IMAGEN
-        const pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
+        const img = images[i];
+        let pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
+        /*
+        const img = loadImage.scale(images[i], {
+            maxWidth: 100,
+            maxHeight: 100, 
+            minWidth: 100,
+            minHeight: 100,
+            canvas: true
+        })
+        const ctx = img.getContext('2d')
+        const array_data = new Float32Array(ctx.getImageData(0, 0, images[i].width, images[i].height).data)
+        */
+        /*
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const pixels = ctx.getImageData(0, 0, img.width, img.height).data;
+        */
+
 
         // PREDICCIÓN
         // Uint8Array -> Tensor 3D RGBA [x,y,4]
-        const rgbaTens3d = tf.tensor3d(pixels.data, [pixels.shape[0], pixels.shape[1], 4])
+        const rgbaTens3d = tf.tensor3d(pixels, [img.width, img.height, 4])
         // Tensor 3D RGBA [x,y,4] -> Tensor 3D RGB [x,y,3]
         const rgbTens3d= tf.slice3d(rgbaTens3d, [0, 0, 0], [-1, -1, 3])
         // Tensor 3D RGB [x,y,3] -> Tensor 3D RGB [100,100,3]
         const smallImg = tf.image.resizeBilinear(rgbTens3d, [100, 100]);
         // Tensor 3D RGB [100,100,3] -> Tensor 4D RGB [1,100,100,3]
         const tensor = smallImg.reshape([1, 100, 100, 3])
-        const prediction = model.predict(tensor).dataSync();
+        const prediction = model.predict(tensor).dataSync()[0];
         console.log("Prediction: ", prediction);
 
         // PINTAR IMAGEN
-        if (prediction[0] >= 0.7) {
+        if (prediction >= 0.7) {
             images[i].style.filter = "blur(2px) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8)";
         }
     }
@@ -43,14 +64,6 @@ async function run() {
     console.log("--INICIO PROCESO: IMAGEN -> PREDICCIÓN--");
     await getImagesAndPredict(model);
     console.log("--FIN PROCESO--");
-
-    // TODO: Pintar de rojo las imágenes peligrosas
-
-    
-    // const IMAGE_SIZE = 100;
-    // const normal = tf.randomNormal([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
-    // const r = model.predict(normal);
-
 }
 
 run();
