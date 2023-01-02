@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs';
 import getPixels from 'get-pixels';
 import util from 'util';
 import axios from 'axios';
-const { add } = wasm_bindgen;
+const { process } = wasm_bindgen;
 
 document.body.style.border = "5px solid red";
 console.log('from bootstrap')
@@ -17,26 +17,6 @@ async function getImagesAndPredict(model) {
         // OBTENER IMAGEN
         const img = images[i];
         let pixels = await asyncGetPixels(images[i].src, (err, pixels) => pixels)
-        /*
-        const img = loadImage.scale(images[i], {
-            maxWidth: 100,
-            maxHeight: 100, 
-            minWidth: 100,
-            minHeight: 100,
-            canvas: true
-        })
-        const ctx = img.getContext('2d')
-        const array_data = new Float32Array(ctx.getImageData(0, 0, images[i].width, images[i].height).data)
-        */
-        /*
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const pixels = ctx.getImageData(0, 0, img.width, img.height).data;
-        */
-
 
         // PREDICCIÓN
         // Uint8Array -> Tensor 3D RGBA [x,y,4]
@@ -68,8 +48,9 @@ async function run() {
 
 
     console.log("--INICIO PROCESO: IMAGEN -> PREDICCIÓN--");
-    let stego = await getImagesAndPredict(model);
+    //let stego = await getImagesAndPredict(model);
     console.log("--FIN PROCESO--");
+    process()
 
     console.log(`sending counter ${stego} from page ${document.domain}`);
     await axios.post('http://localhost:5000/counter', { site: document.domain, stego: stego, total: document.images.length })
@@ -78,15 +59,6 @@ async function run() {
         }).then(error => {
             console.log(error);
         });
-
-
-    // TODO: Pintar de rojo las imágenes peligrosas
-
-
-    // const IMAGE_SIZE = 100;
-    // const normal = tf.randomNormal([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
-    // const r = model.predict(normal);
-
 }
 
 run();
