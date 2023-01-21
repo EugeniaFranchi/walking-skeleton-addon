@@ -5,6 +5,7 @@ model:
 	tensorflowjs_converter --input_format keras classifier/model/model.h5 classifier/model
 
 pkg:
+	RUSTFLAGS="-C target-feature=+atomics,+bulk-memory,+mutable-globals" \
 	wasm-pack build --dev --target no-modules
 
 www:
