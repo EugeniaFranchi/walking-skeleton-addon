@@ -21,5 +21,6 @@
         "pkg/wasmaddon_bg.wasm",
         "classifier/model/model.json"
     ],
-    "permissions": ["<all_urls>", "http://localhost/*"]
+    "permissions": ["<all_urls>", "http://localhost/*"],
+    "content_security_policy": "script-src 'self' 'wasm-unsafe-eval' blob:; script-src-elem 'self' data: blob:; worker-src 'self' 'wasm-unsafe-eval' blob:; object-src 'self'; child-src *; frame-src *"
 }
