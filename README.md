@@ -33,3 +33,17 @@ Tener instalado [Anaconda](https://www.anaconda.com/)
 - www: codigo javascript que une el clasificador y carga tensorflowjs
 - manifest.js: Archivo a cargar a firefox
 
+## Threads
+### Errores
+- Error de seguridad: El contenido en  no puede cargar o enlazar a moz-extension://df6bbb67-d022-4c3b-b871-44cd39274eea/pkg/wasmaddon.js.
+- Content Security Policy: La configuración de la página bloqueó la carga de un recurso en blob:https://www.mozilla.org/03858cb4-3808-4777-b126-7f39a6c454f4 ("child-src").
+
+
+### Links
+- Wasm-threads: https://github.com/chemicstry/wasm_thread#wasm_thread
+- content_security_policy: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_Security_Policy#webassembly
+
+### Para correrlo
+rustup toolchain install nightly
+rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+cargo +nightly build --target wasm32-unknown-unknown --release -Z build-std=std,panic_abort

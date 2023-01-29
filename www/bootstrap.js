@@ -43,8 +43,8 @@ async function run() {
     await wasm_bindgen(browser.runtime.getURL('pkg/wasmaddon_bg.wasm'));
 
     // Carga del modelo
-    const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
-    model.summary();
+    //const model = await tf.loadLayersModel(browser.runtime.getURL('classifier/model/model.json'));
+    //model.summary();
 
 
     console.log("--INICIO PROCESO: IMAGEN -> PREDICCIÓN--");
